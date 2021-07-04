@@ -16,7 +16,7 @@ export interface PersistenceStrategy {
 }
 
 export class VolatileStorage {
-  private storage;
+  private storage: Map<string, string>;
   constructor() {
     this.storage = new Map();
   }
@@ -29,7 +29,7 @@ export class VolatileStorage {
 }
 
 export class CacheManager {
-  private persistenceStrategy;
+  private persistenceStrategy: PersistenceStrategy;
   private storagePrefix = "rqmgmt:";
   constructor(
     persistanceStrategy: PersistenceStrategy = window.localStorage,
@@ -38,12 +38,12 @@ export class CacheManager {
     this.persistenceStrategy = persistanceStrategy;
     this.storagePrefix = storagePrefix;
   }
-  set(
-    key: string,
-    value: string,
-    ttl: number = 1000 * 60 * 5,
-    invalidates: string
-  ) {}
+  // set(
+  //   key: string,
+  //   value: string,
+  //   ttl: number = 1000 * 60 * 5,
+  //   invalidates: string
+  // ) {}
   delete(key: string) {
     this.persistenceStrategy.removeItem(`${this.storagePrefix}${key}`);
   }
