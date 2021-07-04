@@ -23,7 +23,7 @@ describe("AbortManager", () => {
     });
     mgr.register(signal => {
       signalToTrack = signal;
-      return fetchMock("/test", { signal });
+      return fetchMock("/test", { signal }).catch(e => e);
     });
     mgr.register(signal => {
       return fetchMock("/test", { signal });
