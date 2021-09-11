@@ -2,7 +2,7 @@ import { AbortManager } from "../src";
 import fetchMock from "jest-fetch-mock";
 
 describe("AbortManager", () => {
-  it("errors thrown by the promise function are catchable outsite the AbortManager", () => {
+  it("passes on errors thrown by the promise function", () => {
     const mgr = new AbortManager();
     try {
       mgr.register(() => {
@@ -23,11 +23,18 @@ describe("AbortManager", () => {
     });
     mgr.register(signal => {
       signalToTrack = signal;
-      return fetchMock("/test", { signal }).catch(e => e);
+      return fetchMock("/test", { signal });
     });
     mgr.register(signal => {
       return fetchMock("/test", { signal });
     });
     expect(signalToTrack!.aborted).toBeTruthy();
+  });
+  it("returns the result of the promise properly", async () => {
+    const mgr = new AbortManager();
+    const result = await mgr.register(() => {
+      return Promise.resolve("success");
+    });
+    expect(result).toBe("success");
   });
 });
